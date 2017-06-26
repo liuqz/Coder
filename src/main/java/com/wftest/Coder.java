@@ -1,7 +1,6 @@
 package com.wftest;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
@@ -38,7 +37,7 @@ public abstract class Coder {
      * @throws Exception
      */
     public static byte[] decryptBASE64(String key) throws Exception {
-        return (new BASE64Decoder()).decodeBuffer(key);
+        return Base64.decodeBase64(key); //(new BASE64Decoder()).decodeBuffer(key);
     }
 
     /**
@@ -49,7 +48,7 @@ public abstract class Coder {
      * @throws Exception
      */
     public static String encryptBASE64(byte[] key) throws Exception {
-        return (new BASE64Encoder()).encode(key);
+        return Base64.encodeBase64String(key); //(new BASE64Encoder()).encode(key);
     }
 
     /**

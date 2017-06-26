@@ -22,5 +22,7 @@ public class CoderTest {
         logger.info("SHAEncode: " + sha.toString(32));
         String hmacKey = Coder.initHMACKey();
         logger.info("HMAC Key: " + hmacKey);
+        BigInteger mac = new BigInteger(Coder.encryptHMAC(beforeByte, hmacKey));
+        logger.info("HMACEncode: " + mac.toString(16));
     }
 }
