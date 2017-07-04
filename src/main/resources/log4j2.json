@@ -1,38 +1,47 @@
-{ "configuration": { "status": "error", "name": "RoutingTest",
-  "packages": "org.apache.logging.log4j.test",
-  "properties": {
-    "property": { "name": "filename",
-      "value" : "target/log/rollingtest-$${sd:type}.log" }
-  },
-  "ThresholdFilter": { "level": "debug" },
-  "appenders": {
-    "Console": { "name": "STDOUT",
-      "PatternLayout": { "pattern": "%m%n" }
+{
+  "configuration": {
+    "name": "log4j2",
+    "properties": {
+      "property": {
+        "name":"fileName",
+        "value":"target/logs/log4j2.log"
+      }
     },
-    "List": { "name": "List",
-      "ThresholdFilter": { "level": "debug" }
+    "appenders": {
+      "Console": {
+        "name":"Console",
+        "target":"SYSTEM_OUT",
+        "PatternLayout": {
+          "pattern":"%m%n"
+        }
+      },
+      "RollingFile": {
+        "name":"File",
+        "fileName":"${fileName}",
+        "filePattern":"target/logs/test1-%i.log.gz",
+        "PatternLayout": {
+          "pattern":"[%-5p] %d{yyyy-MM-dd HH:mm:ss.SSS} %l - %m%n"
+        },
+        "Policies": {
+          "SizeBasedTriggeringPolicy": {
+            "size":"1 MB"
+          }
+        },
+        "DefaultRolloverStrategy": {
+          "max":"10"
+        }
+      }
     },
-    "Routing": { "name": "Routing",
-      "Routes": { "pattern": "$${sd:type}",
-        "Route": [
-          {
-            "RollingFile": {
-              "name": "Rolling-${sd:type}", "fileName": "${filename}",
-              "filePattern": "target/log/test1-${sd:type}.%i.log.gz",
-              "PatternLayout": {"pattern": "[%-5p] %d{yyyy-MM-dd HH:mm:ss.SSS} %l %m%n"},
-              "SizeBasedTriggeringPolicy": { "size": "500" }
-            }
-          },
-          { "AppenderRef": "STDOUT", "key": "Audit"},
-          { "AppenderRef": "List", "key": "Service"}
-        ]
+    "loggers": {
+      "root": {
+        "level":"debug",
+        "appender-ref": [{
+          "ref":"Console"
+        },
+        {
+          "ref":"File"
+        }]
       }
     }
-  },
-  "loggers": {
-    "logger": { "name": "EventLogger", "level": "info", "additivity": "false",
-      "AppenderRef": { "ref": "Routing" }},
-    "root": { "level": "error", "AppenderRef": { "ref": "STDOUT" }}
   }
-}
 }
