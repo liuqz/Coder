@@ -1,4 +1,4 @@
-package com.wftest;
+package com.wfcode.arithmetic;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -13,8 +13,9 @@ import java.security.MessageDigest;
  *
  * Created by Liuqz on 2017-6-23.
  */
-public abstract class Coder {
+public abstract class BaseCoder {
     public static final String KEY_SHA = "SHA";
+    public static final String KEY_MD5 = "MD5";
 
     /**
      * MAC算法可选以下多种算法
@@ -30,25 +31,38 @@ public abstract class Coder {
     public static final String KEY_HMAC = "HmacSHA512";
 
     /**
-     * BASE64解密
+     * BASE64解码
      *
      * @param key
      * @return
      * @throws Exception
      */
-    public static byte[] decryptBASE64(String key) throws Exception {
-        return Base64.decodeBase64(key); //(new BASE64Decoder()).decodeBuffer(key);
+    public static String decryptBASE64(String key) throws Exception {
+        return new String(Base64.decodeBase64(key), "UTF-8");
     }
 
     /**
-     * BASE64加密
+     * BASE64编码
      *
      * @param key
      * @return
      * @throws Exception
      */
-    public static String encryptBASE64(byte[] key) throws Exception {
-        return Base64.encodeBase64String(key); //(new BASE64Encoder()).encode(key);
+    public static String encryptBASE64(String key) throws Exception {
+        return Base64.encodeBase64String(key.getBytes("UTF-8"));
+    }
+
+    /**
+     * MD5加密
+     *
+     * @param data
+     * @return
+     * @throws Exception
+     */
+    public static String encryptMD5(String data) throws Exception {
+        MessageDigest md5 = MessageDigest.getInstance(KEY_MD5);
+        md5.update(data.getBytes("UTF-8"));
+        return Base64.encodeBase64String(md5.digest());
     }
 
     /**
@@ -58,10 +72,10 @@ public abstract class Coder {
      * @return
      * @throws Exception
      */
-    public static byte[] encryptSHA(byte[] data) throws Exception {
+    public static String encryptSHA(String data) throws Exception {
         MessageDigest sha = MessageDigest.getInstance(KEY_SHA);
-        sha.update(data);
-        return sha.digest();
+        sha.update(data.getBytes("UTF-8"));
+        return Base64.encodeBase64String(sha.digest());
     }
 
     /**
@@ -73,7 +87,7 @@ public abstract class Coder {
     public static String initHMACKey() throws Exception {
         KeyGenerator keyGenerator = KeyGenerator.getInstance(KEY_HMAC);
         SecretKey secretKey = keyGenerator.generateKey();
-        return encryptBASE64(secretKey.getEncoded());
+        return Base64.encodeBase64String(secretKey.getEncoded());
     }
 
     /**
@@ -84,11 +98,11 @@ public abstract class Coder {
      * @return
      * @throws Exception
      */
-    public static byte[] encryptHMAC(byte[] data, String key) throws Exception {
-        SecretKey secretKey = new SecretKeySpec(decryptBASE64(key), KEY_HMAC);
+    public static String encryptHMAC(String data, String key) throws Exception {
+        SecretKey secretKey = new SecretKeySpec(decryptBASE64(key).getBytes(), KEY_HMAC);
         Mac mac = Mac.getInstance(secretKey.getAlgorithm());
         mac.init(secretKey);
-        return mac.doFinal(data);
+        return Base64.encodeBase64String(mac.doFinal(data.getBytes("UTF-8")));
     }
 
 }

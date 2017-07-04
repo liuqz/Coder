@@ -1,4 +1,4 @@
-package com.wftest.asymmetry;
+package com.wfcode.arithmetic;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.ArrayUtils;

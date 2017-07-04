@@ -1,4 +1,4 @@
-package com.wftest.utils;
+package com.wfcode.utils;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -11,7 +11,7 @@ import java.util.Vector;
  *
  * Created by Liuqz on 2017-6-30.
  */
-public class SysHardinfoUtil {
+public class SysUtil {
 
     /**
      * 获得MAC列表
