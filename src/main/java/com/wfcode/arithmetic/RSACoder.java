@@ -17,7 +17,7 @@ import java.util.Map;
  *
  * Created by Liuqz on 2017-6-23.
  */
-public class RSACoder {
+public abstract class RSACoder {
     public static final String KEY_ALGORITHM = "RSA";
     public static final String SIGNATURE_ALGORITHM = "SHA512withRSA";
     public static final String CIPHAR_ALGORITHM = "RSA/ECB/PKCS1Padding ";

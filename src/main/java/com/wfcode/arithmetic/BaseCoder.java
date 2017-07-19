@@ -37,7 +37,7 @@ public abstract class BaseCoder {
      * @return
      * @throws Exception
      */
-    public static String decryptBASE64(String key) throws Exception {
+    public static String decryptBase64(String key) throws Exception {
         return new String(Base64.decodeBase64(key), "UTF-8");
     }
 
@@ -48,7 +48,7 @@ public abstract class BaseCoder {
      * @return
      * @throws Exception
      */
-    public static String encryptBASE64(String key) throws Exception {
+    public static String encryptBase64(String key) throws Exception {
         return Base64.encodeBase64String(key.getBytes("UTF-8"));
     }
 
@@ -79,12 +79,12 @@ public abstract class BaseCoder {
     }
 
     /**
-     * 初始化HMAC密钥
+     * 生成HMAC密钥
      *
      * @return
      * @throws Exception
      */
-    public static String initHMACKey() throws Exception {
+    public static String generateHMACKey() throws Exception {
         KeyGenerator keyGenerator = KeyGenerator.getInstance(KEY_HMAC);
         SecretKey secretKey = keyGenerator.generateKey();
         return Base64.encodeBase64String(secretKey.getEncoded());
@@ -99,7 +99,7 @@ public abstract class BaseCoder {
      * @throws Exception
      */
     public static String encryptHMAC(String data, String key) throws Exception {
-        SecretKey secretKey = new SecretKeySpec(decryptBASE64(key).getBytes(), KEY_HMAC);
+        SecretKey secretKey = new SecretKeySpec(decryptBase64(key).getBytes(), KEY_HMAC);
         Mac mac = Mac.getInstance(secretKey.getAlgorithm());
         mac.init(secretKey);
         return Base64.encodeBase64String(mac.doFinal(data.getBytes("UTF-8")));

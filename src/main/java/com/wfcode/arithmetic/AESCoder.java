@@ -19,7 +19,7 @@ import java.security.Key;
  * </pre>
  * Created by Liuqz on 2017-7-4.
  */
-public class AESCoder {
+public abstract class AESCoder {
     /**
      * ALGORITHM 算法 <br>
      * 可替换为以下任意一种算法，同时key值的size相应改变。
