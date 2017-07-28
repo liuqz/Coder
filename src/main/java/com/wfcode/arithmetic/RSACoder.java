@@ -24,17 +24,17 @@ public abstract class RSACoder {
 
     private static final String PUBLIC_KEY = "RSAPublicKey";
     private static final String PRIVATE_KEY = "RSAPrivateKey";
-    private static final int ENCRYPT_BLOCK_MAX = 117;
-    private static final int DECRYPT_BLOCK_MAX = 128;
+    private static final int MAX_ENCRYPT_BLOCK = 117;
+    private static final int MAX_DECRYPT_BLOCK = 128;
 
     /**
-     * 初始化密钥
+     * 初始化密钥，生成密钥对
      *
      * @return
      * @throws Exception
      */
-    public static Map<String, Object> initKey() throws Exception {
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(KEY_ALGORITHM);
+    public static Map<String, Object> generateKey() throws Exception {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(KEY_ALGORITHM, new org.bouncycastle.jce.provider.BouncyCastleProvider());
         keyPairGenerator.initialize(1024);
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
 
@@ -59,8 +59,8 @@ public abstract class RSACoder {
         return Base64.encodeBase64String(key.getEncoded());
     }
 
-    private static PublicKey getPublicKey(Map<String, Object> keyMap) throws Exception {
-        PublicKey publicKey = (PublicKey) keyMap.get(PUBLIC_KEY);
+    private static RSAPublicKey getPublicKey(Map<String, Object> keyMap) throws Exception {
+        RSAPublicKey publicKey = (RSAPublicKey) keyMap.get(PUBLIC_KEY);
         return publicKey;
     }
 
@@ -89,8 +89,8 @@ public abstract class RSACoder {
         return Base64.encodeBase64String(key.getEncoded());
     }
 
-    private static PrivateKey getPrivateKey(Map<String, Object> keyMap) throws Exception {
-        PrivateKey privateKey = (PrivateKey) keyMap.get(PRIVATE_KEY);
+    private static RSAPrivateKey getPrivateKey(Map<String, Object> keyMap) throws Exception {
+        RSAPrivateKey privateKey = (RSAPrivateKey) keyMap.get(PRIVATE_KEY);
         return privateKey;
     }
 
@@ -164,7 +164,7 @@ public abstract class RSACoder {
      * @throws Exception
      */
     private static byte[] process(byte[] data, Cipher cipher, boolean encrypt) throws Exception {
-        int blockSize = encrypt ? ENCRYPT_BLOCK_MAX : DECRYPT_BLOCK_MAX;
+        int blockSize = encrypt ? MAX_ENCRYPT_BLOCK : MAX_DECRYPT_BLOCK;
         int dateLength = data.length;
         byte[] outData = new byte[0];
         for (int i=0; i<dateLength; i+=blockSize){
